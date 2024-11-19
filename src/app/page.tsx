@@ -4,6 +4,7 @@ import Header2 from "./components/Header2";
 import Footer from "./components/Footer";
 import { fetchRecipes } from "./api/recipe/api";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [recipes, setRecipes] = useState([]);
@@ -40,8 +41,8 @@ export default function Home() {
             and keep track of your favorite dishes.
           </p>
           <div className="mt-6 space-x-4">
-            <button className="bg-gray-800 text-white px-6 py-2 rounded">Login</button>
-            <button className="bg-gray-600 text-white px-6 py-2 rounded">Signup</button>
+            <Link href={"sign-in"} className="bg-gray-800 text-white px-6 py-2 rounded">Login</Link>
+            <Link href={"sign-up"} className="bg-gray-600 text-white px-6 py-2 rounded">Signup</Link>
           </div>
         </section>
 
