@@ -1,101 +1,111 @@
-import Image from "next/image";
+'use client'
+import Head from "next/head";
+import Header2 from "./components/Header2";
+import Footer from "./components/Footer";
+import { fetchRecipes } from "./api/recipe/api";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const data = await fetchRecipes();
+        setRecipes(data.results);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadRecipes();
+  }, []);
+
+  return (
+    <>
+      <Head>
+        <title>Meal Mate</title>
+      </Head>
+      <main className="bg-gray-100 min-h-screen">
+        <Header2 />
+        <section className="text-center py-16 bg-gray-100">
+          <h1 className="text-4xl font-bold">MEAL MATE</h1>
+          <p className="text-gray-600 mt-4">
+            We're thrilled to have you here. Dive into a world of delicious possibilities, 
+            where you can explore new recipes, customize your culinary creations, 
+            and keep track of your favorite dishes.
+          </p>
+          <div className="mt-6 space-x-4">
+            <button className="bg-gray-800 text-white px-6 py-2 rounded">Login</button>
+            <button className="bg-gray-600 text-white px-6 py-2 rounded">Signup</button>
+          </div>
+        </section>
+
+        <section className="py-12 bg-white">
+          <h2 className="text-2xl font-bold text-center mb-6">What are your favorite cuisines?</h2>
+          <p className="text-center text-gray-600 mb-10">Personalize Your Experience</p>
+          <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {loading && <p>Loading recipes...</p>}
+            {error && <p className="text-red-600">Error: {error}</p>}
+            {!loading &&
+              !error &&
+              recipes.map((recipe) => (
+                <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-40 object-cover rounded mb-4"
+                  />
+                  <h3 className="text-lg font-semibold">{recipe.title}</h3>
+                  <p className="text-gray-600 mt-2">
+                    Explore this delicious recipe now!
+                  </p>
+                </div>
+              ))}
+          </div>
+        </section>
+
+        <section className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-center mb-6">Contact us</h2>
+            <form className="max-w-lg mx-auto space-y-6">
+              <div>
+                <label className="block text-gray-600 mb-2">Name</label>
+                <input
+                  type="text"
+                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 mb-2">Email</label>
+                <input
+                  type="email"
+                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  placeholder="john.doe@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 mb-2">Contact Num</label>
+                <input
+                  type="text"
+                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  placeholder="+9476454878"
+                />
+              </div>
+              <button className="w-full bg-gray-800 text-white px-6 py-2 rounded">
+                Submit
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <Footer />
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </>
   );
 }
