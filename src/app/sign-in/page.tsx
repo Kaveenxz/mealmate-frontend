@@ -1,37 +1,116 @@
-import React from 'react'
-import Header2 from '../components/Header2'
+'use client';
+import React, { useEffect, useState } from "react";
+import Header2 from "../components/Header2";
+import axios from "../utils/api";
+import { useRouter } from "next/navigation";
 
-function page() {
+function Page() {
+    const router = useRouter()
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    acceptTerms: false,
+  });
+
+  useEffect(() => {
+    const fetchProtectedData = async () => {
+      try {
+        const response = await axios.get("/protected/endpoint"); // Example endpoint
+        console.log("Protected data:", response.data);
+      } catch (error) {
+        console.error("Error fetching protected data:", error.response?.data || error.message);
+      }
+    };
+
+    fetchProtectedData();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.acceptTerms) {
+      alert("You must accept the terms and conditions to proceed.");
+      return;
+    }
+
+    const payload = {
+      username: formData.username,
+      password: formData.password,
+    };
+
+    try {
+      const response = await axios.post("/auth/user/login", payload);
+
+      // Extract token, userId, and role from response
+      const { token, userId, role } = response.data;
+
+      // Save the token in localStorage
+      localStorage.setItem("token", token);
+
+      console.log("Login successful:", response.data);
+      alert("Login successful!");
+
+      // Redirect based on role
+      if (role === "USER") {
+        router.push( "/user-dashboard");
+      } else if (role === "ADMIN") {
+        router.push("/admin-dashboard");
+      } else {
+        // alert("Unknown role. Please contact support.");
+        router.push("/admin-dashboard");
+      }
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      alert("Login failed. Please check your credentials.");
+    }
+  };
+
   return (
-    <div className='bg-gray-100 w-full h-screen'>
-        <Header2/>
-
-        <div className='mt-10'>
+    <div className="bg-gray-100 w-full h-screen">
+      <Header2 />
+      <div className="mt-10">
         <section className="py-12 bg-white mx-[30%]">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-6">Sign in Here</h2>
-            <form className="max-w-lg mx-auto space-y-6">
-              
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
               <div>
                 <label className="block text-gray-600 mb-2">User Name</label>
                 <input
                   type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
                   className="w-full border-gray-300 border rounded px-4 py-2"
-                  placeholder="john.doe@example.com"
+                  placeholder="john.doe"
+                  required
                 />
               </div>
               <div>
                 <label className="block text-gray-600 mb-2">Password</label>
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   className="w-full border-gray-300 border rounded px-4 py-2"
                   placeholder="your password"
+                  required
                 />
               </div>
-              <div className='flex gap-3'>
-                
+              <div className="flex gap-3">
                 <input
                   type="checkbox"
+                  name="acceptTerms"
+                  checked={formData.acceptTerms}
+                  onChange={handleChange}
                 />
                 <label className="mt-1 block text-gray-600 mb-2">Accept T&C</label>
               </div>
@@ -42,10 +121,9 @@ function page() {
             </form>
           </div>
         </section>
-
-        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default page
+export default Page;
