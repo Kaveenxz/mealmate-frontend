@@ -1,31 +1,95 @@
-import React from 'react'
-import Header2 from '../components/Header2'
+'use client';
+import React, { useEffect, useState } from 'react';
+import Header2 from '../components/Header2';
+import { fetchRecipes, searchRecipes } from '../api/recipe/api';
 
-function page() {
+function Page() {
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const data = await fetchRecipes();
+        setRecipes(data.results);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadRecipes();
+  }, []);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = await searchRecipes(searchQuery);
+      setRecipes(data.results);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
-        <Header2/>
+      <Header2 />
 
-        <div>
-        <section className="py-12 bg-white">
-          <h2 className="text-2xl font-bold text-center mb-6">What are your favorite cuisines?</h2>
-          <p className="text-center text-gray-600 mb-10">Personalize Your Experience</p>
-          <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {["Air Fryer Chicken", "Honey Garlic Chicken", "Best Ever Buttermilk Blueberry Muffins"].map((title, index) => (
-              <div key={index} className="bg-white shadow-md p-4 rounded">
-                <div className="bg-gray-300 h-40 rounded mb-4"></div>
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <p className="text-gray-600 mt-2">
-                  Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, 
-                  or even a very very short story.
-                </p>
-              </div>
-            ))}
+      <div>
+        {/* Search Bar */}
+        <section className="py-6 bg-gray-100">
+          <div className="container mx-auto px-4">
+            <form onSubmit={handleSearch} className="flex items-center mb-6">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for recipes..."
+                className="flex-grow px-4 py-2 border rounded-l focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600"
+              >
+                Search
+              </button>
+            </form>
           </div>
         </section>
-        </div>
+
+        {/* Recipe Grid */}
+        <section className="py-12 bg-white">
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Find Your Favorite Recipes
+          </h2>
+          <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {loading && <p>Loading recipes...</p>}
+            {error && <p className="text-red-600">Error: {error}</p>}
+            {!loading &&
+              !error &&
+              recipes.map((recipe) => (
+                <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-40 object-cover rounded mb-4"
+                  />
+                  <h3 className="text-lg font-semibold">{recipe.title}</h3>
+                  <p className="text-gray-600 mt-2">
+                    Explore this delicious recipe now!
+                  </p>
+                </div>
+              ))}
+          </div>
+        </section>
+      </div>
     </div>
-  )
+  );
 }
 
-export default page
+export default Page;

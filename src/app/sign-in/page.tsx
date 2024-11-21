@@ -15,13 +15,13 @@ function Page() {
   useEffect(() => {
     const fetchProtectedData = async () => {
       try {
-        const response = await axios.get("/protected/endpoint"); // Example endpoint
+        const response = await axios.get("/protected/endpoint");
         console.log("Protected data:", response.data);
       } catch (error) {
         console.error("Error fetching protected data:", error.response?.data || error.message);
       }
     };
-
+      
     fetchProtectedData();
   }, []);
 
@@ -34,44 +34,55 @@ function Page() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.acceptTerms) {
-      alert("You must accept the terms and conditions to proceed.");
-      return;
-    }
+  if (!formData.acceptTerms) {
+    alert("You must accept the terms and conditions to proceed.");
+    return;
+  }
 
-    const payload = {
-      username: formData.username,
-      password: formData.password,
-    };
-
-    try {
-      const response = await axios.post("/auth/user/login", payload);
-
-      // Extract token, userId, and role from response
-      const { token, userId, role } = response.data;
-
-      // Save the token in localStorage
-      localStorage.setItem("token", token);
-
-      console.log("Login successful:", response.data);
-      alert("Login successful!");
-
-      // Redirect based on role
-      if (role === "USER") {
-        router.push( "/user-dashboard");
-      } else if (role === "ADMIN") {
-        router.push("/admin-dashboard");
-      } else {
-        // alert("Unknown role. Please contact support.");
-        router.push("/admin-dashboard");
-      }
-    } catch (error) {
-      console.error("Login failed:", error.response?.data || error.message);
-      alert("Login failed. Please check your credentials.");
-    }
+  const payload = {
+    username: formData.username,
+    password: formData.password,
   };
+
+  try {
+    const response = await axios.post("/auth/user/login", payload);
+
+    // Extract token and userId from response
+    const { token, userId } = response.data;
+
+    // Save the token in localStorage
+    localStorage.setItem("token", token);
+
+    console.log("Login successful:", response.data);
+
+    // Fetch user details using userId
+    const userResponse = await axios.get(`/api/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the request headers
+      },
+    });
+
+    const { role } = userResponse.data;
+
+    console.log("User details fetched successfully:", userResponse.data);
+
+    // Redirect based on role
+    if (role === "USER") {
+      router.push("/user-dashboard");
+    } else if (role === "ADMIN") {
+      router.push("/admin-dashboard");
+    } else {
+      alert("Unknown role. Please contact support.");
+      router.push("/error-page");
+    }
+  } catch (error) {
+    console.error("Error during login or fetching user details:", error.response?.data || error.message);
+    alert("Login failed. Please check your credentials.");
+  }
+};
+
 
   return (
     <div className="bg-gray-100 w-full h-screen">

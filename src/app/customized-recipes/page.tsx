@@ -1,133 +1,150 @@
 'use client';
-import React, { useState } from "react";
-import Header2 from "../components/Header2";
+import React, { useState, useEffect } from 'react';
+import Header2 from '../components/Header2';
+import axios from '@/app/utils/api';
 
 function RecipeForm() {
   const [formData, setFormData] = useState({
-    recipeTitle: "",
-    ingredientsList: "",
-    customNotes: "",
-    ratingsAndComments: "",
+    recipeName: '',
+    customInstructions: '',
   });
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch all recipes on mount
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get('/api/customized-recipes');
+      setRecipes(response.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch recipes');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
-    alert("Recipe submitted successfully!");
-    // Reset form after submission
-    setFormData({
-      recipeTitle: "",
-      ingredientsList: "",
-      customNotes: "",
-      ratingsAndComments: "",
-    });
+    setError(null);
+
+    try {
+      const response = await axios.post('/api/customized-recipes', formData);
+      setRecipes([...recipes, response.data]); 
+      setFormData({ recipeName: '', customInstructions: '' }); 
+      alert('Recipe submitted successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to create recipe');
+    }
   };
 
-  const handleCancel = () => {
-    // Reset form when cancel is clicked
-    setFormData({
-      recipeTitle: "",
-      ingredientsList: "",
-      customNotes: "",
-      ratingsAndComments: "",
-    });
+  const handleDelete = async (id) => {
+    setError(null);
+
+    try {
+      await axios.delete(`/api/customized-recipes/${id}`);
+      setRecipes(recipes.filter((recipe) => recipe.id !== id));
+      alert('Recipe deleted successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete recipe');
+    }
   };
 
   return (
-   <div className="bg-gray-100 w-full h-screen">  
-    <div>
-        <Header2/>
-    </div>
+    <div className="bg-gray-100 w-full h-screen">
+      <Header2 />
 
-    <div className="mt-10 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-md w-96 p-6">
-        <h2 className="text-lg font-bold text-center mb-6">
-          Create Customized Recipes
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Recipe Title */}
-          <div>
-            <label className="block text-gray-600 mb-2">Recipe Title</label>
-            <input
-              type="text"
-              name="recipeTitle"
-              value={formData.recipeTitle}
-              onChange={handleChange}
-              placeholder="Butter Chicken Naan"
-              className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
-              required
-            />
-          </div>
+      {/* Recipe Form */}
+      <div className="mt-10 flex justify-center items-center">
+        <div className="bg-white rounded-lg shadow-md w-96 p-6">
+          <h2 className="text-lg font-bold text-center mb-6">Create Customized Recipes</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Recipe Name */}
+            <div>
+              <label className="block text-gray-600 mb-2">Recipe Name</label>
+              <input
+                type="text"
+                name="recipeName"
+                value={formData.recipeName}
+                onChange={handleChange}
+                placeholder="Butter Chicken Naan"
+                className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
+                required
+              />
+            </div>
 
-          {/* Ingredients List */}
-          <div>
-            <label className="block text-gray-600 mb-2">Ingredients List</label>
-            <input
-              type="text"
-              name="ingredientsList"
-              value={formData.ingredientsList}
-              onChange={handleChange}
-              placeholder="Chicken breast"
-              className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
-              required
-            />
-          </div>
+            {/* Custom Instructions */}
+            <div>
+              <label className="block text-gray-600 mb-2">Custom Instructions</label>
+              <textarea
+                name="customInstructions"
+                value={formData.customInstructions}
+                onChange={handleChange}
+                placeholder="Describe your custom steps..."
+                className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
+                rows="4"
+                required
+              />
+            </div>
 
-          {/* Custom Notes */}
-          <div>
-            <label className="block text-gray-600 mb-2">Custom Notes</label>
-            <input
-              type="text"
-              name="customNotes"
-              value={formData.customNotes}
-              onChange={handleChange}
-              placeholder="Wash the chicken first"
-              className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
-              required
-            />
-          </div>
+            {/* Buttons */}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
-          {/* Ratings & Comments */}
-          <div>
-            <label className="block text-gray-600 mb-2">Ratings & Comments</label>
-            <textarea
-              name="ratingsAndComments"
-              value={formData.ratingsAndComments}
-              onChange={handleChange}
-              placeholder="4 Stars"
-              className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
-              rows="3"
-            />
-          </div>
+      {/* Error Handling */}
+      {error && (
+        <div className="text-center text-red-500 mt-5">
+          <p>{error}</p>
+        </div>
+      )}
 
-          {/* Buttons */}
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-            >
-              Submit
-            </button>
+      {/* Recipe List */}
+      <div className="mt-10 mx-5">
+        <h2 className="text-xl font-bold mb-4">Your Customized Recipes</h2>
+        {loading ? (
+          <p>Loading recipes...</p>
+        ) : recipes.length > 0 ? (
+          <div className="grid grid-cols-3 gap-6">
+            {recipes.map((recipe) => (
+              <div key={recipe.id} className="bg-white rounded-lg shadow-md p-4">
+                <h3 className="font-bold text-lg">{recipe.recipeName}</h3>
+                <p className="mt-2 text-gray-600">{recipe.customInstructions}</p>
+                <div className="flex justify-between mt-4">
+                  <button
+                    onClick={() => handleDelete(recipe.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        </form>
+        ) : (
+          <p>No recipes found. Create one!</p>
+        )}
       </div>
     </div>
-   </div>
   );
 }
 

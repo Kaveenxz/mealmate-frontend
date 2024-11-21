@@ -1,33 +1,100 @@
-import React from 'react'
-import Header2 from '../components/Header2'
-import UDRecipe from '../components/UDRecipe'
+'use client';
+import React, { useState } from 'react';
+import Header2 from '../components/Header2';
+import { searchRecipes } from '../api/recipe/api';
 
-function page() {
-    return (
-        <div className='bg-gray-100 w-full h-screen'>
-            <Header2 />
+function Page() {
+  const [recipes, setRecipes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-            <div className='mt-5'>
-                <h3 className='text-center font-bold'>We’re thrilled to have you here. Dive into a world of delicious possibilities, where you can explore new recipes,<br /> customize your culinary creations, and keep track of your favorite dishes.</h3>
+  // Handle Search
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = await searchRecipes(searchQuery);
+      setRecipes(data.results);
+    } catch (err) {
+      setError('Failed to fetch recipes. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Remove Recipe
+  const removeRecipe = (index: number) => {
+    setRecipes((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="bg-gray-100 w-full h-screen">
+      <Header2 />
+
+      {/* Welcome Section */}
+      <div className="mt-5">
+        <h3 className="text-center font-bold">
+          We’re thrilled to have you here. Dive into a world of delicious
+          possibilities, where you can explore new recipes,
+          <br />
+          customize your culinary creations, and keep track of your favorite
+          dishes.
+        </h3>
+      </div>
+
+      {/* Search Section */}
+      <div className="flex justify-start mx-5 mt-5">
+        <form onSubmit={handleSearch} className="flex items-center w-full">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search for recipes..."
+            className="flex-grow px-4 py-2 border rounded-l focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+
+      {/* Search Results */}
+      <div className="mt-5">
+        <h2 className="text-gray-800 px-8 py-2 rounded-md border bg-white">
+          Recent Activity
+        </h2>
+      </div>
+
+      {loading && <p className="text-center mt-5">Loading recipes...</p>}
+      {error && <p className="text-center text-red-600 mt-5">{error}</p>}
+
+      <div className="grid grid-cols-4 gap-10 mx-5 mt-10">
+        {recipes.map((recipe, index) => (
+          <div key={recipe.id || index} className="">
+            <div className="bg-gray-200 flex justify-between px-3 py-2 pb-6 border-b-2 border-gray-700">
+              <div>
+                <h4 className="text-sm">Recipe {index + 1}</h4>
+                <h2 className="font-semibold">{recipe.title}</h2>
+              </div>
+              <button
+                onClick={() => removeRecipe(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                close
+              </button>
             </div>
-
-            <div className='flex justify-start mx-5 mt-16 '>
-                <h2 className="text-gray-800 text-gray px-8 py-2 rounded-md border bg-white">Recent Activity</h2>
+            <div>
+              <p className="mx-5">{recipe.summary || 'Description not available'}</p>
             </div>
-
-            <div className='grid grid-cols-4 gap-10 mx-5 mt-10'>
-                <UDRecipe recipeyId={"Recipe 01"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 02"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 03"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 04"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 01"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 01"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 01"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-                <UDRecipe recipeyId={"Recipe 01"} recipeName={"Air Frier Chicken"} desc={"Sticky Sweet and Spicy Asian Chicken Thighs"}/>
-
-            </div>
-        </div>
-    )
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default page
+export default Page;
