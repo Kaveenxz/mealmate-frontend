@@ -34,54 +34,52 @@ function Page() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!formData.acceptTerms) {
-    alert("You must accept the terms and conditions to proceed.");
-    return;
-  }
-
-  const payload = {
-    username: formData.username,
-    password: formData.password,
-  };
-
-  try {
-    const response = await axios.post("/auth/user/login", payload);
-
-    // Extract token and userId from response
-    const { token, userId } = response.data;
-
-    // Save the token in localStorage
-    localStorage.setItem("token", token);
-
-    console.log("Login successful:", response.data);
-
-    // Fetch user details using userId
-    const userResponse = await axios.get(`/api/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the request headers
-      },
-    });
-
-    const { role } = userResponse.data;
-
-    console.log("User details fetched successfully:", userResponse.data);
-
-    // Redirect based on role
-    if (role === "USER") {
-      router.push("/user-dashboard");
-    } else if (role === "ADMIN") {
-      router.push("/admin-dashboard");
-    } else {
-      alert("Unknown role. Please contact support.");
-      router.push("/error-page");
+    e.preventDefault();
+  
+    if (!formData.acceptTerms) {
+      alert("You must accept the terms and conditions to proceed.");
+      return;
     }
-  } catch (error) {
-    console.error("Error during login or fetching user details:", error.response?.data || error.message);
-    alert("Login failed. Please check your credentials.");
-  }
-};
+  
+    const payload = {
+      username: formData.username,
+      password: formData.password,
+    };
+  
+    try {
+      const response = await axios.post("/auth/user/login", payload);
+      const { token, userId } = response.data;
+  
+      // Save token to localStorage
+      localStorage.setItem("token", token);
+  
+      // Fetch user details
+      const userResponse = await axios.get(`/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const { role } = userResponse.data;
+  
+      // Save user role to localStorage
+      localStorage.setItem("userRole", role);
+  
+      console.log("Login successful. Redirecting...");
+      if (role === "USER") {
+        router.push("/user-dashboard");
+      } else if (role === "ADMIN") {
+        router.push("/admin-dashboard");
+      } else {
+        alert("Unknown role. Please contact support.");
+        router.push("/error-page");
+      }
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      alert("Invalid credentials. Please try again.");
+    }
+  };
+  
 
 
   return (
