@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Head from "next/head";
 import Header2 from "./components/Header2";
 import Footer from "./components/Footer";
@@ -10,8 +10,20 @@ export default function Home() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
+    // Check user login status
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+
+    if (token && role) {
+      setIsLoggedIn(true);
+      setUserRole(role);
+    }
+
+    // Load recipes
     async function loadRecipes() {
       try {
         const data = await fetchRecipes();
@@ -41,8 +53,35 @@ export default function Home() {
             and keep track of your favorite dishes.
           </p>
           <div className="mt-6 space-x-4">
-            <Link href={"sign-in"} className="bg-gray-800 text-white px-6 py-2 rounded">Login</Link>
-            <Link href={"sign-up"} className="bg-gray-600 text-white px-6 py-2 rounded">Signup</Link>
+            {!isLoggedIn ? (
+              <>
+                <Link href={"sign-in"} className="bg-gray-800 text-white px-6 py-2 rounded">
+                  Login
+                </Link>
+                <Link href={"sign-up"} className="bg-gray-600 text-white px-6 py-2 rounded">
+                  Signup
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href={userRole === "ADMIN" ? "/admin-dashboard" : "/user-dashboard"}
+                  className="bg-gray-800 text-white px-6 py-2 rounded"
+                >
+                  {userRole === "ADMIN" ? "Admin Dashboard" : "User Dashboard"}
+                </Link>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("userRole");
+                    setIsLoggedIn(false);
+                  }}
+                  className="bg-gray-600 text-white px-6 py-2 rounded"
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
         </section>
 

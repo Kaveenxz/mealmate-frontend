@@ -43,7 +43,7 @@ function Header2() {
               Admin Dashboard
             </Link>
           ) : (
-            <Link href="/user-dashboard" className="text-gray-600 hover:text-gray-800">
+            <Link href="/" className="text-gray-600 hover:text-gray-800">
               Profile
             </Link>
           )}
