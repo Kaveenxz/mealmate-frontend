@@ -12,7 +12,6 @@ function RecipeForm() {
   const [loading, setLoading]:any = useState(false);
   const [error, setError]:any = useState(null);
 
-  // Fetch all recipes on mount
   useEffect(() => {
     fetchRecipes();
   }, []);
@@ -65,7 +64,6 @@ function RecipeForm() {
     <div className="bg-gray-100 w-full h-screen">
       <Header2 />
 
-      {/* Recipe Form */}
       <div className="mt-10 flex justify-center items-center">
         <div className="bg-white rounded-lg shadow-md w-96 p-6">
           <h2 className="text-lg font-bold text-center mb-6">Create Customized Recipes</h2>
@@ -84,7 +82,6 @@ function RecipeForm() {
               />
             </div>
 
-            {/* Custom Instructions */}
             <div>
               <label className="block text-gray-600 mb-2">Custom Instructions</label>
               <textarea
@@ -98,7 +95,6 @@ function RecipeForm() {
               />
             </div>
 
-            {/* Buttons */}
             <div className="flex justify-end">
               <button
                 type="submit"
@@ -111,14 +107,12 @@ function RecipeForm() {
         </div>
       </div>
 
-      {/* Error Handling */}
       {error && (
         <div className="text-center text-red-500 mt-5">
           <p>{error}</p>
         </div>
       )}
 
-      {/* Recipe List */}
       <div className="mt-10 mx-5">
         <h2 className="text-xl font-bold mb-4">Your Customized Recipes</h2>
         {loading ? (

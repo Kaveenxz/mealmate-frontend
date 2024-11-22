@@ -39,7 +39,6 @@ export default function FoodDonationForm() {
       return;
     }
 
-    // Prepare data for the API
     const externalServiceData = {
       serviceName: formData.foodName,
       serviceType: "Food Donation",
@@ -49,7 +48,6 @@ export default function FoodDonationForm() {
     };
 
     try {
-      // Send POST request to the backend
       const response = await axios.post(
         "/api/external-services",
         externalServiceData
@@ -80,7 +78,6 @@ export default function FoodDonationForm() {
             Food Donation Centers
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Food Name */}
             <div>
               <label className="block text-gray-600 mb-2">Food Name</label>
               <input
@@ -94,7 +91,6 @@ export default function FoodDonationForm() {
               />
             </div>
 
-            {/* Donation Center */}
             <div>
               <label className="block text-gray-600 mb-2">Donation Center</label>
               <select
@@ -113,7 +109,6 @@ export default function FoodDonationForm() {
               </select>
             </div>
 
-            {/* Donation Amount */}
             <div>
               <label className="block text-gray-600 mb-2">
                 Food Donation Amount
@@ -129,7 +124,6 @@ export default function FoodDonationForm() {
               />
             </div>
 
-            {/* Terms and Conditions */}
             <div>
               <label className="flex items-center space-x-2">
                 <input
@@ -146,7 +140,6 @@ export default function FoodDonationForm() {
               </a>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-gray-800 text-white px-6 py-2 rounded"

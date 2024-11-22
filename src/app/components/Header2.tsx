@@ -21,7 +21,6 @@ function Header2() {
   }, []);
 
   const handleLogout = () => {
-    // Clear token and user data
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
     setIsLoggedIn(false);

@@ -1,7 +1,6 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
-import axios from '../utils/api'; // Use the custom axios instance
+import axios from '../utils/api'; 
 import Header2 from '../components/Header2';
 
 function UserPage() {

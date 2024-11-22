@@ -19,17 +19,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Load user from local storage or cookie
     const token = localStorage.getItem('authToken');
     if (token) {
-      // Replace with real user data fetching if needed
       setUser({ name: 'John Doe', email: 'john@example.com' });
     }
   }, []);
 
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem('authToken', 'fakeToken'); // Replace with real token
+    localStorage.setItem('authToken', 'fakeToken'); 
   };
 
   const logout = () => {

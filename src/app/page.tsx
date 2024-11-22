@@ -14,7 +14,6 @@ export default function Home() {
   const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
-    // Check user login status
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("userRole");
 

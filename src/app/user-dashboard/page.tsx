@@ -9,7 +9,6 @@ function Page() {
   const [error, setError]:any = useState(null);
   const [loading, setLoading]:any = useState(false);
 
-  // Handle Search
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -23,7 +22,6 @@ function Page() {
     }
   };
 
-  // Remove Recipe
   const removeRecipe = (index: number) => {
     setRecipes((prev:any) => prev.filter((_:any, i:any) => i !== index));
   };
@@ -32,7 +30,6 @@ function Page() {
     <div className="bg-gray-100 w-full h-screen">
       <Header2 />
 
-      {/* Welcome Section */}
       <div className="mt-5">
         <h3 className="text-center font-bold">
           We’re thrilled to have you here. Dive into a world of delicious
@@ -43,7 +40,6 @@ function Page() {
         </h3>
       </div>
 
-      {/* Search Section */}
       <div className="flex justify-start mx-5 mt-5">
         <form onSubmit={handleSearch} className="flex items-center w-full">
           <input
@@ -62,7 +58,6 @@ function Page() {
         </form>
       </div>
 
-      {/* Search Results */}
       <div className="mt-5">
         <h2 className="text-gray-800 px-8 py-2 rounded-md border bg-white">
           Recent Activity

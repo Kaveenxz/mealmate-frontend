@@ -24,17 +24,14 @@ export default function page() {
       alert("Please accept the terms to proceed!");
       return;
     }
-    // Save recipe logic
     console.log("Recipe saved:", recipe);
   };
 
   const handleUpdate = () => {
-    // Update recipe logic
     console.log("Recipe updated:", recipe);
   };
 
   const handleDelete = () => {
-    // Delete recipe logic
     console.log("Recipe deleted:", recipe.id);
   };
 
@@ -64,7 +61,6 @@ export default function page() {
           />
         </div>
 
-        {/* Recipe ID */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-medium mb-1">
             Recipe ID

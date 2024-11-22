@@ -41,7 +41,6 @@ function Page() {
       <Header2 />
 
       <div>
-        {/* Search Bar */}
         <section className="py-6 bg-gray-100">
           <div className="container mx-auto px-4">
             <form onSubmit={handleSearch} className="flex items-center mb-6">
@@ -62,7 +61,6 @@ function Page() {
           </div>
         </section>
 
-        {/* Recipe Grid */}
         <section className="py-12 bg-white">
           <h2 className="text-2xl font-bold text-center mb-6">
             Find Your Favorite Recipes

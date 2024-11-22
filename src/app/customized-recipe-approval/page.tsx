@@ -81,7 +81,6 @@ export default function RecipeApproval() {
                         </div>
                     ))}
 
-                    {/* Message for No Recipes */}
                     {recipes.length === 0 && (
                         <p className="text-center text-gray-500 mt-6">
                             No recipes left for approval!

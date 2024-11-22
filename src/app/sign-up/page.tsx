@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from "react";
-import axios from "../utils/api"; // Adjust the path based on your folder structure
+import axios from "../utils/api";
 import Header2 from "../components/Header2";
 import { useRouter } from "next/navigation";
 

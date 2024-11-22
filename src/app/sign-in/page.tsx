@@ -50,10 +50,8 @@ function Page() {
       const response = await axios.post("/auth/user/login", payload);
       const { token, userId } = response.data;
   
-      // Save token to localStorage
       localStorage.setItem("token", token);
   
-      // Fetch user details
       const userResponse = await axios.get(`/api/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -62,7 +60,6 @@ function Page() {
   
       const { role } = userResponse.data;
   
-      // Save user role to localStorage
       localStorage.setItem("userRole", role);
   
       console.log("Login successful. Redirecting...");
