@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Header2 from '../components/Header2';
 import { fetchRecipes, searchRecipes } from '../api/recipe/api';
-
+import Link from 'next/link';
 function Page() {
   const [recipes, setRecipes]:any = useState([]);
   const [loading, setLoading]:any = useState(true);
@@ -70,18 +70,20 @@ function Page() {
             {error && <p className="text-red-600">Error: {error}</p>}
             {!loading &&
               !error &&
-              recipes.map((recipe:any) => (
-                <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.title}
-                    className="w-full h-40 object-cover rounded mb-4"
-                  />
-                  <h3 className="text-lg font-semibold">{recipe.title}</h3>
-                  <p className="text-gray-600 mt-2">
-                    Explore this delicious recipe now!
-                  </p>
-                </div>
+              recipes.map((recipe: any) => (
+                <Link key={recipe.id} href={`/recipe/${recipe.id}`}>
+                  <div className="bg-white shadow-md p-4 rounded cursor-pointer hover:shadow-lg transition">
+                    <img
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className="w-full h-40 object-cover rounded mb-4"
+                    />
+                    <h3 className="text-lg font-semibold">{recipe.title}</h3>
+                    <p className="text-gray-600 mt-2">
+                      Click to explore this delicious recipe!
+                    </p>
+                  </div>
+                </Link>
               ))}
           </div>
         </section>

@@ -112,6 +112,12 @@ function Header2() {
               <Link href="/customized-recipes" className="text-gray-600 hover:text-gray-800">
                 Customized Recipes
               </Link>
+              <Link
+                href="/community-interraction"
+                className="text-gray-600 hover:text-gray-800"
+              >
+                Community Interaction
+              </Link>
               <Link href="/contact" className="text-gray-600 hover:text-gray-800">
                 Contact
               </Link>

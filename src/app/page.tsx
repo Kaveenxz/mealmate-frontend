@@ -27,7 +27,7 @@ export default function Home() {
       try {
         const data = await fetchRecipes();
         setRecipes(data.results);
-      } catch (err:any) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -47,8 +47,8 @@ export default function Home() {
         <section className="text-center py-16 bg-gray-100">
           <h1 className="text-4xl font-bold">MEAL MATE</h1>
           <p className="text-gray-600 mt-4">
-            We're thrilled to have you here. Dive into a world of delicious possibilities, 
-            where you can explore new recipes, customize your culinary creations, 
+            We're thrilled to have you here. Dive into a world of delicious possibilities,
+            where you can explore new recipes, customize your culinary creations,
             and keep track of your favorite dishes.
           </p>
           <div className="mt-6 space-x-4">
@@ -92,19 +92,22 @@ export default function Home() {
             {error && <p className="text-red-600">Error: {error}</p>}
             {!loading &&
               !error &&
-              recipes.map((recipe:any) => (
-                <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.title}
-                    className="w-full h-40 object-cover rounded mb-4"
-                  />
-                  <h3 className="text-lg font-semibold">{recipe.title}</h3>
-                  <p className="text-gray-600 mt-2">
-                    Explore this delicious recipe now!
-                  </p>
-                </div>
+              recipes.map((recipe: any) => (
+                <Link key={recipe.id} href={`/recipe/${recipe.id}`}>
+                  <div className="bg-white shadow-md p-4 rounded cursor-pointer hover:shadow-lg transition">
+                    <img
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className="w-full h-40 object-cover rounded mb-4"
+                    />
+                    <h3 className="text-lg font-semibold">{recipe.title}</h3>
+                    <p className="text-gray-600 mt-2">
+                      Click to explore this delicious recipe!
+                    </p>
+                  </div>
+                </Link>
               ))}
+
           </div>
         </section>
 
