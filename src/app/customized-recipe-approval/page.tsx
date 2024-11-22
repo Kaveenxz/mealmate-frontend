@@ -27,7 +27,7 @@ export default function RecipeApproval() {
         },
     ]);
 
-    const handleApprove = (id) => {
+    const handleApprove = (id:any) => {
         setRecipes((prevRecipes) =>
             prevRecipes.map((recipe) =>
                 recipe.id === id ? { ...recipe, approved: true } : recipe
@@ -35,7 +35,7 @@ export default function RecipeApproval() {
         );
     };
 
-    const handleReject = (id) => {
+    const handleReject = (id:any) => {
         setRecipes((prevRecipes) =>
             prevRecipes.filter((recipe) => recipe.id !== id)
         );

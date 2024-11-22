@@ -4,10 +4,10 @@ import Header2 from '../components/Header2';
 import { searchRecipes } from '../api/recipe/api';
 
 function Page() {
-  const [recipes, setRecipes] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [recipes, setRecipes]:any = useState([]);
+  const [searchQuery, setSearchQuery]:any = useState('');
+  const [error, setError]:any = useState(null);
+  const [loading, setLoading]:any = useState(false);
 
   // Handle Search
   const handleSearch = async (e: React.FormEvent) => {
@@ -16,7 +16,7 @@ function Page() {
     try {
       const data = await searchRecipes(searchQuery);
       setRecipes(data.results);
-    } catch (err) {
+    } catch (err:any) {
       setError('Failed to fetch recipes. Please try again.');
     } finally {
       setLoading(false);
@@ -25,7 +25,7 @@ function Page() {
 
   // Remove Recipe
   const removeRecipe = (index: number) => {
-    setRecipes((prev) => prev.filter((_, i) => i !== index));
+    setRecipes((prev:any) => prev.filter((_:any, i:any) => i !== index));
   };
 
   return (
@@ -73,7 +73,7 @@ function Page() {
       {error && <p className="text-center text-red-600 mt-5">{error}</p>}
 
       <div className="grid grid-cols-4 gap-10 mx-5 mt-10">
-        {recipes.map((recipe, index) => (
+        {recipes.map((recipe:any, index:any) => (
           <div key={recipe.id || index} className="">
             <div className="bg-gray-200 flex justify-between px-3 py-2 pb-6 border-b-2 border-gray-700">
               <div>

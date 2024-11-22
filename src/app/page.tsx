@@ -28,7 +28,7 @@ export default function Home() {
       try {
         const data = await fetchRecipes();
         setRecipes(data.results);
-      } catch (err) {
+      } catch (err:any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -93,7 +93,7 @@ export default function Home() {
             {error && <p className="text-red-600">Error: {error}</p>}
             {!loading &&
               !error &&
-              recipes.map((recipe) => (
+              recipes.map((recipe:any) => (
                 <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
                   <img
                     src={recipe.image}

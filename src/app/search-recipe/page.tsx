@@ -4,17 +4,17 @@ import Header2 from '../components/Header2';
 import { fetchRecipes, searchRecipes } from '../api/recipe/api';
 
 function Page() {
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [recipes, setRecipes]:any = useState([]);
+  const [loading, setLoading]:any = useState(true);
+  const [error, setError]:any = useState(null);
+  const [searchQuery, setSearchQuery]:any = useState('');
 
   useEffect(() => {
     async function loadRecipes() {
       try {
         const data = await fetchRecipes();
         setRecipes(data.results);
-      } catch (err) {
+      } catch (err:any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -29,7 +29,7 @@ function Page() {
     try {
       const data = await searchRecipes(searchQuery);
       setRecipes(data.results);
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -72,7 +72,7 @@ function Page() {
             {error && <p className="text-red-600">Error: {error}</p>}
             {!loading &&
               !error &&
-              recipes.map((recipe) => (
+              recipes.map((recipe:any) => (
                 <div key={recipe.id} className="bg-white shadow-md p-4 rounded">
                   <img
                     src={recipe.image}

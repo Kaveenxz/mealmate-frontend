@@ -17,7 +17,7 @@ function Page() {
       try {
         const response = await axios.get("/protected/endpoint");
         console.log("Protected data:", response.data);
-      } catch (error) {
+      } catch (error:any) {
         console.error("Error fetching protected data:", error.response?.data || error.message);
       }
     };
@@ -25,7 +25,7 @@ function Page() {
     fetchProtectedData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -33,7 +33,7 @@ function Page() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
   
     if (!formData.acceptTerms) {
@@ -74,7 +74,7 @@ function Page() {
         alert("Unknown role. Please contact support.");
         router.push("/error-page");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error("Login failed:", error.response?.data || error.message);
       alert("Invalid credentials. Please try again.");
     }

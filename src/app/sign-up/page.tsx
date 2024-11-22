@@ -13,7 +13,7 @@ function Page() {
     acceptTerms: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -21,7 +21,7 @@ function Page() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     if (!formData.acceptTerms) {
@@ -33,16 +33,16 @@ function Page() {
       username: formData.username,
       email: formData.email,
       password: formData.password,
-      role: "USER", // Adjust based on your backend logic
+      role: "USER", 
     };
 
     try {
-      const response = await axios.post("/auth/user/register", payload); // Endpoint for user creation
+      const response = await axios.post("/auth/user/register", payload); 
       console.log("User created successfully:", response.data);
       router.push("/sign-in");
 
       alert("Registration successful!");
-    } catch (error) {
+    } catch (error:any) {
       if (error.response?.status === 400) {
         alert("The username or email is already taken. Please try a different one.");
       } else {

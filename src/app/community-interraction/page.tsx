@@ -14,8 +14,7 @@ export default function FoodDonationForm() {
   const [donationCenters, setDonationCenters] = useState([]);
 
   useEffect(() => {
-    // Fake donation centers for demonstration
-    const fakeCenters = [
+    const fakeCenters:any = [
       { id: 1, name: "Save Food Malabe" },
       { id: 2, name: "Helping Hands Colombo" },
       { id: 3, name: "Food Bank Sri Lanka" },
@@ -24,7 +23,7 @@ export default function FoodDonationForm() {
     setDonationCenters(fakeCenters);
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -32,7 +31,7 @@ export default function FoodDonationForm() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     if (!formData.acceptedTerms) {
@@ -106,7 +105,7 @@ export default function FoodDonationForm() {
                 required
               >
                 <option value="">Select a donation center</option>
-                {donationCenters.map((center) => (
+                {donationCenters.map((center:any) => (
                   <option key={center.id} value={center.name}>
                     {center.name}
                   </option>

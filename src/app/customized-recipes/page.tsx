@@ -4,13 +4,13 @@ import Header2 from '../components/Header2';
 import axios from '@/app/utils/api';
 
 function RecipeForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData]:any = useState({
     recipeName: '',
     customInstructions: '',
   });
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [recipes, setRecipes]:any = useState([]);
+  const [loading, setLoading]:any = useState(false);
+  const [error, setError]:any = useState(null);
 
   // Fetch all recipes on mount
   useEffect(() => {
@@ -23,19 +23,19 @@ function RecipeForm() {
     try {
       const response = await axios.get('/api/customized-recipes');
       setRecipes(response.data);
-    } catch (err) {
+    } catch (err:any) {
       setError(err.response?.data?.message || 'Failed to fetch recipes');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     setError(null);
 
@@ -44,19 +44,19 @@ function RecipeForm() {
       setRecipes([...recipes, response.data]); 
       setFormData({ recipeName: '', customInstructions: '' }); 
       alert('Recipe submitted successfully!');
-    } catch (err) {
+    } catch (err:any) {
       setError(err.response?.data?.message || 'Failed to create recipe');
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id:any) => {
     setError(null);
 
     try {
       await axios.delete(`/api/customized-recipes/${id}`);
-      setRecipes(recipes.filter((recipe) => recipe.id !== id));
+      setRecipes(recipes.filter((recipe:any) => recipe.id !== id));
       alert('Recipe deleted successfully!');
-    } catch (err) {
+    } catch (err:any) {
       setError(err.response?.data?.message || 'Failed to delete recipe');
     }
   };
@@ -93,7 +93,7 @@ function RecipeForm() {
                 onChange={handleChange}
                 placeholder="Describe your custom steps..."
                 className="w-full border-gray-300 border rounded px-4 py-2 focus:ring focus:outline-none"
-                rows="4"
+                rows={4}
                 required
               />
             </div>
@@ -125,7 +125,7 @@ function RecipeForm() {
           <p>Loading recipes...</p>
         ) : recipes.length > 0 ? (
           <div className="grid grid-cols-3 gap-6">
-            {recipes.map((recipe) => (
+            {recipes.map((recipe:any) => (
               <div key={recipe.id} className="bg-white rounded-lg shadow-md p-4">
                 <h3 className="font-bold text-lg">{recipe.recipeName}</h3>
                 <p className="mt-2 text-gray-600">{recipe.customInstructions}</p>

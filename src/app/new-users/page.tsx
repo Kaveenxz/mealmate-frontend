@@ -16,7 +16,7 @@ function UserPage() {
       try {
         const response = await axios.get('api/users'); 
         setUsers(response.data);
-      } catch (err) {
+      } catch (err:any) {
         setError(err.response?.data?.message || 'Failed to fetch users');
       } finally {
         setLoading(false);
@@ -45,7 +45,7 @@ function UserPage() {
 
       {!loading && !error && users.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {users.map((user) => (
+          {users.map((user:any) => (
             <div
               key={user.id}
               className="bg-white shadow-md rounded-lg p-4"

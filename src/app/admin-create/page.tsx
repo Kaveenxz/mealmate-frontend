@@ -13,7 +13,7 @@ function Page() {
     acceptTerms: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -21,7 +21,7 @@ function Page() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     if (!formData.acceptTerms) {
@@ -42,7 +42,7 @@ function Page() {
       router.push("/admin-dashboard");
 
       alert("Registration successful!");
-    } catch (error) {
+    } catch (error:any) {
       if (error.response?.status === 400) {
         alert("The username or email is already taken. Please try a different one.");
       } else {

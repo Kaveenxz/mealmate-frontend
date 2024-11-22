@@ -11,7 +11,7 @@ export default function RecipeDetail() {
     acceptTerms: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -19,7 +19,7 @@ export default function RecipeDetail() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     if (formValues.acceptTerms) {
       alert("Recipe added to Meal Cart!");
@@ -92,7 +92,7 @@ export default function RecipeDetail() {
               onChange={handleChange}
               disabled
               className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed"
-              rows="4"
+              rows={4}
             ></textarea>
           </div>
 
