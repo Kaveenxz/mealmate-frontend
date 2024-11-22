@@ -13,6 +13,12 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState("");
 
+  // Contact form states
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contactNum, setContactNum] = useState("");
+  const [formErrors, setFormErrors] = useState<any>({});
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("userRole");
@@ -36,6 +42,37 @@ export default function Home() {
 
     loadRecipes();
   }, []);
+
+  const validateForm = () => {
+    const errors: any = {};
+
+    if (!name.trim()) errors.name = "Name is required.";
+    if (!email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "Email is invalid.";
+    }
+    if (!contactNum.trim()) {
+      errors.contactNum = "Contact number is required.";
+    } else if (!/^\+?\d{10,15}$/.test(contactNum)) {
+      errors.contactNum = "Contact number must be a valid number.";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      alert("Thank you! Your message has been submitted.");
+      setName("");
+      setEmail("");
+      setContactNum("");
+      setFormErrors({});
+    }
+  };
 
   return (
     <>
@@ -107,39 +144,49 @@ export default function Home() {
                   </div>
                 </Link>
               ))}
-
           </div>
         </section>
 
         <section className="py-12 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-6">Contact us</h2>
-            <form className="max-w-lg mx-auto space-y-6">
+            <form className="max-w-lg mx-auto space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-gray-600 mb-2">Name</label>
                 <input
                   type="text"
-                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  className={`w-full border ${formErrors.name ? "border-red-500" : "border-gray-300"} rounded px-4 py-2`}
                   placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
+                {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
               </div>
               <div>
                 <label className="block text-gray-600 mb-2">Email</label>
                 <input
                   type="email"
-                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  className={`w-full border ${formErrors.email ? "border-red-500" : "border-gray-300"} rounded px-4 py-2`}
                   placeholder="john.doe@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
+                {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
               </div>
               <div>
                 <label className="block text-gray-600 mb-2">Contact Num</label>
                 <input
                   type="text"
-                  className="w-full border-gray-300 border rounded px-4 py-2"
+                  className={`w-full border ${formErrors.contactNum ? "border-red-500" : "border-gray-300"} rounded px-4 py-2`}
                   placeholder="+9476454878"
+                  value={contactNum}
+                  onChange={(e) => setContactNum(e.target.value)}
                 />
+                {formErrors.contactNum && (
+                  <p className="text-red-500 text-sm mt-1">{formErrors.contactNum}</p>
+                )}
               </div>
-              <button className="w-full bg-gray-800 text-white px-6 py-2 rounded">
+              <button type="submit" className="w-full bg-gray-800 text-white px-6 py-2 rounded">
                 Submit
               </button>
             </form>
